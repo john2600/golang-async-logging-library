@@ -14,7 +14,7 @@ const messageTimestampPattern = `\[\d{4}-\d{2}-\d{2}\ \d{2}:\d{2}:\d{2}] - `
 
 // 01
 func TestMessageChannelModule2(t *testing.T) {
-	alog := New(nil)
+	alog := New(nil, nil)
 	if alog.msgCh == nil {
 		t.Fatal("msgCh field not initialized. Should have type 'chan string' but it is currently nil")
 	}
@@ -22,7 +22,7 @@ func TestMessageChannelModule2(t *testing.T) {
 
 // 02
 func TestErrorChannelModule2(t *testing.T) {
-	alog := New(nil)
+	alog := New(nil, nil)
 	if alog.errorCh == nil {
 		t.Fatal("errorCh field not initialized. Should have type 'chan error' but it is currently nil")
 	}
@@ -30,7 +30,7 @@ func TestErrorChannelModule2(t *testing.T) {
 
 // 03
 func TestMessageChannelMethodModule2(t *testing.T) {
-	alog := New(nil)
+	alog := New(nil, nil)
 	if alog.MessageChannel() != alog.msgCh {
 		t.Fatal("MessageChannel method does not return the msgCh field")
 	}
@@ -42,7 +42,7 @@ func TestMessageChannelMethodModule2(t *testing.T) {
 
 // 04
 func TestErrorChannelMethodModule2(t *testing.T) {
-	alog := New(nil)
+	alog := New(nil, nil)
 	if alog.ErrorChannel() != alog.errorCh {
 		t.Fatal("ErrorChannel method does not return the errorCh field")
 	}
@@ -55,7 +55,7 @@ func TestErrorChannelMethodModule2(t *testing.T) {
 // 05
 func TestWritesToWriterModule2(t *testing.T) {
 	b := bytes.NewBuffer([]byte{})
-	alog := New(b)
+	alog := New(b, nil)
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	alog.write("test", wg)
@@ -79,7 +79,7 @@ func (ew errorWriter) Write(data []byte) (int, error) {
 	return 0, errors.New("error")
 }
 func TestWriteSendsErrorsToErrorChannelModule2(t *testing.T) {
-	alog := New(&errorWriter{bytes.NewBuffer([]byte{})})
+	alog := New(&errorWriter{bytes.NewBuffer([]byte{})}, nil)
 	alog.errorCh = make(chan error, 1)
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
@@ -108,7 +108,7 @@ func (sw sleepingWriter) Write(data []byte) (int, error) {
 
 func TestStartHandlesMessagesModule2(t *testing.T) {
 	b := bytes.NewBuffer([]byte{})
-	alog := New(sleepingWriter{b})
+	alog := New(sleepingWriter{b}, nil)
 	alog.msgCh = make(chan string, 2)
 	go alog.Start()
 	alog.msgCh <- "test message"
@@ -149,7 +149,7 @@ func (pw panickingWriter) Write(data []byte) (int, error) {
 }
 func TestWriteSendsWriteRequestsSequentiallyModule2(t *testing.T) {
 	b := bytes.NewBuffer([]byte{})
-	alog := New(sleepingWriter{b})
+	alog := New(sleepingWriter{b}, nil)
 	if alog.m == nil {
 		t.Fatal("Alog's mutex field 'm' not initialized")
 	}
