@@ -137,6 +137,7 @@ func TestStartHandlesMessagesModule2(t *testing.T) {
 			alog.m.Lock()
 		}
 	}
+
 	written = b.Bytes()
 	if !regexp.MustCompile(messageTimestampPattern + "test message\n" + messageTimestampPattern + "second message\n").Match(written) {
 		t.Error("write method not called as a goroutine")
