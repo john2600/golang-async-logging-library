@@ -26,10 +26,8 @@ func main() {
 			log.Fatal("Unable to open log file", err)
 		}
 	}
-	c := make(chan string)
-	e := make(chan error)
 
-	l := alog.New(w, c, e)
+	l := alog.New(w)
 	go l.Start()
 
 	messageChan := l.MessageChannel()
