@@ -1,6 +1,5 @@
 package alog
 
-/*
 import (
 	//"bytes"
 	//"errors"
@@ -223,4 +222,3 @@ func TestWriteSendsErrorsAsynchronouslyModule2(t *testing.T) {
 		t.Fatal("Error messages not sent to error channel")
 	}
 }
-*/
